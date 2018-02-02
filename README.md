@@ -14,6 +14,8 @@ Moveit configurations packages for robots supported by [T.O.U.G.H.](https://gith
 | rightArm      |     -          | r_clav -> r_hand|
 | rightPalm     |     -          | pelvis -> r_hand|
 | leftPalm      |     -          | pelvis -> l_hand|
+
+
 ___
 ## Valkyrie
 ### Move-groups:
@@ -25,3 +27,13 @@ ___
 | rightArm               | rightShoulderPitch, rightShoulderRoll, rightShoulderYaw, rightElbowPitch, rightForearmYaw, rightWristRoll, rightWristPitch  | rightShoulderPitchLink -> rightPalm |
 | rightPalm              | -  | pelvis -> rightPalm |
 | leftPalm               | -  | pelvis -> leftPalm  |
+
+### Run MoveIt!
+For a standalone execution of these packages use following commands in your terminal:
+``` 
+roslaunch atlas_moveit_config demo.launch
+```
+```
+roslaunch valkyrie_moveit_config demo.launch 
+```
+Once launching the demo, you should see the robot (atlas or valkyrie) in MoveIt! GUI. 
