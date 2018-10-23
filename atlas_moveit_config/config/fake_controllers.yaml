@@ -1,5 +1,5 @@
 controller_list:
-  - name: fake_leftArm_controller
+  - name: fake_L_SHOULDER_HAND_7DOF_controller
     joints:
       - l_arm_shx
       - l_arm_ely
@@ -7,15 +7,7 @@ controller_list:
       - l_arm_wry
       - l_arm_wrx
       - l_arm_wry2
-  - name: fake_rightArm_controller
-    joints:
-      - r_arm_shx
-      - r_arm_ely
-      - r_arm_elx
-      - r_arm_wry
-      - r_arm_wrx
-      - r_arm_wry2
-  - name: fake_rightPalm_controller
+  - name: fake_R_PELVIS_PALM_10DOF_controller
     joints:
       - back_bkz
       - back_bky
@@ -27,7 +19,7 @@ controller_list:
       - r_arm_wry
       - r_arm_wrx
       - r_arm_wry2
-  - name: fake_leftPalm_controller
+  - name: fake_L_PELVIS_PALM_10DOF_controller
     joints:
       - back_bkz
       - back_bky
@@ -39,24 +31,8 @@ controller_list:
       - l_arm_wry
       - l_arm_wrx
       - l_arm_wry2
-  - name: fake_leftMiddleFingerGroup_controller
+  - name: fake_R_SHOULDER_HAND_7DOF_controller
     joints:
-      - back_bkz
-      - back_bky
-      - back_bkx
-      - l_arm_shz
-      - l_arm_shx
-      - l_arm_ely
-      - l_arm_elx
-      - l_arm_wry
-      - l_arm_wrx
-      - l_arm_wry2
-  - name: fake_rightMiddleFingerGroup_controller
-    joints:
-      - back_bkz
-      - back_bky
-      - back_bkx
-      - r_arm_shz
       - r_arm_shx
       - r_arm_ely
       - r_arm_elx
