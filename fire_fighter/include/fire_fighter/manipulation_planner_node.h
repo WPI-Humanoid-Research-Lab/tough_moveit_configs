@@ -5,11 +5,14 @@
 #include <ros/ros.h>
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit/robot_trajectory/robot_trajectory.h>
 #include <moveit/planning_interface/planning_interface.h>
 #include <moveit/planning_scene/planning_scene.h>
 #include <moveit/kinematic_constraints/utils.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <moveit_msgs/PlanningScene.h>
+#include <moveit/trajectory_processing/iterative_time_parameterization.h>
 
 #include <tough_common/robot_state.h>
 #include <tough_controller_interface/wholebody_control_interface.h>

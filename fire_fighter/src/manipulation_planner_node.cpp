@@ -14,6 +14,25 @@ int ManipulationPlannerNode::execute(std::string PLANNING_GROUP, geometry_msgs::
     planning_interface::PlannerManagerPtr planner_instance;
     std::string planner_plugin_name;
 
+    // Robot state is required for generating RobotTrajectory object
+    // RobotTrajectoryObject is required for generating creating IterativeParabolicTimeParameterization
+    // IterativeParabolicTimeParameterization is required for generating timestamps for each trajectory point
+    // Procedure:   create RobotTrajectory object using the RobotModelPtr and planning group name
+    //              create RobotState object using the same RobotModelPtr
+    //              After planner generates a new trajectory, update the robot state
+    //              update the RobotTrajectory
+    //              call computeTimeStamps
+    //              convert RobotTrajectory back to moveit_msgs_RobotTrajectory
+
+
+    robot_model::RobotState moveitRobotState = robot_state::RobotState(robot_model);
+    robot_trajectory::RobotTrajectory robot_traj = robot_trajectory::RobotTrajectory(robot_model, PLANNING_GROUP);
+
+    trajectory_processing::IterativeParabolicTimeParameterization timeParameterizer;
+
+
+
+
     if (!nh.getParam("/move_group/planning_plugin", planner_plugin_name))
       ROS_FATAL_STREAM("Could not find planner plugin name");
     try
@@ -48,11 +67,8 @@ int ManipulationPlannerNode::execute(std::string PLANNING_GROUP, geometry_msgs::
     std::vector<double> tolerance_pose(3, 0.01);
     std::vector<double> tolerance_angle(3, 0.01);
 
-    req.start_state.joint_state.header = std_msgs::Header();
-    robotStateInformer->getJointNames(req.start_state.joint_state.name);
-    robotStateInformer->getJointPositions(req.start_state.joint_state.position);
-    robotStateInformer->getJointVelocities(req.start_state.joint_state.velocity);
-    robotStateInformer->getJointEfforts(req.start_state.joint_state.effort);
+
+    robotStateInformer->getJointStateMessage(req.start_state.joint_state);
 
     req.group_name = PLANNING_GROUP;
 
@@ -89,6 +105,16 @@ int ManipulationPlannerNode::execute(std::string PLANNING_GROUP, geometry_msgs::
     display_trajectory.trajectory_start = response.trajectory_start;
     display_trajectory.trajectory.push_back(response.trajectory);
     display_publisher.publish(display_trajectory);
+
+    moveitRobotState.update();
+    robot_traj.setRobotTrajectoryMsg(moveitRobotState, response.trajectory.joint_trajectory);
+    timeParameterizer.computeTimeStamps(robot_traj);
+
+    robot_traj.getRobotTrajectoryMsg(response.trajectory);
+
+    for(size_t i = 0; i < response.trajectory.joint_trajectory.joint_names.size() ; i++){
+        ROS_INFO("%d: Joint Name %s, number of points %d", i, response.trajectory.joint_trajectory.joint_names.at(i).c_str(), response.trajectory.joint_trajectory.points.size());
+    }
 
     WholebodyControlInterface wholeBody(nh);
     wholeBody.executeTrajectory(RobotSide::LEFT,response.trajectory);

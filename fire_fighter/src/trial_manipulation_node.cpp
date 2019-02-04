@@ -1,5 +1,6 @@
 #include <pluginlib/class_loader.h>
 #include <ros/ros.h>
+#include "tough_common/tough_common_names.h"
 #include <geometry_msgs/PoseStamped.h>
 #include <fire_fighter/manipulation_planner_node.h>
 
@@ -10,7 +11,7 @@ int main(int argc, char** argv)
     spinner.start();
     ros::NodeHandle nh;
 
-    const std::string PLANNING_GROUP = "L_PELVIS_PALM_10DOF";
+    const std::string PLANNING_GROUP = TOUGH_COMMON_NAMES::LEFT__ARM_10DOF_GROUP;
 
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = "pelvis";
@@ -19,7 +20,7 @@ int main(int argc, char** argv)
     pose.pose.position.z = 0.2;
     pose.pose.orientation.w = 1.0;
 
-    std::string link_name = "l_palm";
+    std::string link_name = "l_hand";
 
     ManipulationPlannerNode man;
     man.execute(PLANNING_GROUP,pose, link_name);
