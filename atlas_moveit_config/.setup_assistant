@@ -1,11 +1,11 @@
 moveit_setup_assistant_config:
   URDF:
     package: ihmc_atlas_ros
-    relative_path: urdf/atlas_unplugged_v5_dual_robotiq_with_head.urdf
-    xacro_args: ""
+    relative_path: urdf/atlas_v5_robotiq.urdf
+    xacro_args: "--inorder "
   SRDF:
     relative_path: config/atlas.srdf
   CONFIG:
-    author_name: Vinayak Jagtap
-    author_email: vvjagtap@wpi.edu
-    generated_timestamp: 1539981619
+    author_name: Ashay Aswale
+    author_email: asaswale@wpi.edu
+    generated_timestamp: 1549304541
