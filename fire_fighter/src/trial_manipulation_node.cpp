@@ -11,7 +11,7 @@ int main(int argc, char** argv)
     spinner.start();
     ros::NodeHandle nh;
 
-    const std::string PLANNING_GROUP = TOUGH_COMMON_NAMES::LEFT__ARM_10DOF_GROUP;
+    const std::string PLANNING_GROUP = "L_PELVIS_PALM_10DOF"; //TOUGH_COMMON_NAMES::LEFT__ARM_10DOF_GROUP;
 
     geometry_msgs::PoseStamped pose;
     pose.header.frame_id = "pelvis";
@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 
     std::string link_name = "l_hand";
 
-    ManipulationPlannerNode man;
-    man.execute(PLANNING_GROUP,pose, link_name);
+    ManipulationPlannerNode man(nh);
+    man.execute(pose, PLANNING_GROUP, link_name);
 
     return 0;
 }

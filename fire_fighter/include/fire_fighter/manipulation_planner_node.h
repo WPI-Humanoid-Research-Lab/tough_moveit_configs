@@ -21,13 +21,28 @@
 class ManipulationPlannerNode
 {
 public:
-    int execute(std::string, geometry_msgs::PoseStamped, std::string);
+    ManipulationPlannerNode(ros::NodeHandle &nh);
+    int execute(geometry_msgs::PoseStamped pose, std::string PLANNING_GROUP, std::string link_name);
 
 private:
-    ros::NodeHandle nh;
-    RobotStateInformer *robotStateInformer = RobotStateInformer::getRobotStateInformer(nh);
+    ros::NodeHandle nh_;
+    robot_model::RobotModelPtr robot_model;
+    std::string planner_plugin_name;
+    planning_interface::PlannerManagerPtr planner_instance;
+    boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::PlannerManager>> planner_plugin_loader;
+    planning_interface::MotionPlanRequest req;
+    planning_interface::MotionPlanResponse res;
+    moveit_msgs::MotionPlanResponse response;
+    RobotStateInformer *robotStateInformer;
+//    planning_scene::PlanningScenePtr planning_scene;
+    trajectory_processing::IterativeParabolicTimeParameterization timeParameterizer;
+
+    std::string PLANNING_GROUP = "L_PELVIS_PALM_10DOF";
     std::string link_name = "l_palm";
 
+    void displayInRviz(moveit_msgs::MotionPlanResponse response);
+    void publishToWholeBodyTrajectory(moveit_msgs::MotionPlanResponse response, std::string PLANNING_GROUP);
+    void loadPlanners();
 };
 
 
