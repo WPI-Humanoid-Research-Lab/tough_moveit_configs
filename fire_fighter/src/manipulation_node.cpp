@@ -109,7 +109,7 @@ int main(int argc, char** argv)
   display_publisher.publish(display_trajectory);
 
   WholebodyControlInterface wholeBody(nh);
-  wholeBody.executeTrajectory(RobotSide::LEFT,response.trajectory);
+  wholeBody.executeTrajectory(response.trajectory);
 
 
   ros::Duration(10).sleep();

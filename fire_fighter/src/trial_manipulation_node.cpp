@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 
     std::string link_name = "l_hand";
 
-    ManipulationPlannerNode man(nh);
-    man.execute(pose, PLANNING_GROUP, link_name);
+    TaskspacePlanner man(nh);
+    man.execute(pose, PLANNING_GROUP);
 
     return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef MANIPULATION_PLANNER_NODE_H
-#define MANIPULATION_PLANNER_NODE_H
+#ifndef TASKSPACE_PLANNER_H
+#define TASKSPACE_PLANNER_H
 
 #include <pluginlib/class_loader.h>
 #include <ros/ros.h>
@@ -15,35 +15,58 @@
 #include <moveit/trajectory_processing/iterative_time_parameterization.h>
 
 #include <tough_common/robot_state.h>
+#include <tough_common/robot_description.h>
+#include <tough_common/tough_common_names.h>
 #include <tough_controller_interface/wholebody_control_interface.h>
 #include <tough_common/robot_description.h>
 
-class ManipulationPlannerNode
+class TaskspacePlanner
 {
 public:
-    ManipulationPlannerNode(ros::NodeHandle &nh);
-    int execute(geometry_msgs::PoseStamped pose, std::string PLANNING_GROUP, std::string link_name);
+    TaskspacePlanner(ros::NodeHandle &nh, std::string urdf_param="");
+    ~TaskspacePlanner();
+    bool execute(const geometry_msgs::PoseStamped &pose, std::string planning_group = TOUGH_COMMON_NAMES::RIGHT_ARM_10DOF_GROUP);
 
+    double getPositionTolerance() const;
+    void setPositionTolerance(const double position_tolerance);
+
+    double getAngleTolerance() const;
+    void setAngleTolerance(const double tolerance_angle);
+
+    std::string getPluginParameter() const;
+    void setPluginParameter(const std::string &plugin_param);
 private:
     ros::NodeHandle nh_;
-    robot_model::RobotModelPtr robot_model;
+    ros::Publisher display_publisher_;
+
+    std::shared_ptr<robot_model::RobotState>  moveit_robot_state_ ;
+    std::string plugin_param_;
+
+    moveit_msgs::DisplayTrajectory display_trajectory_;
+//    robot_model::RobotState moveit_robot_state_  ;
+//    robot_trajectory::RobotTrajectory robot_traj_;
+    robot_model::RobotModelPtr robot_model_;
+
+    WholebodyControlInterface wholebodyController_;
     std::string planner_plugin_name;
     planning_interface::PlannerManagerPtr planner_instance;
+    planning_scene::PlanningScenePtr planning_scene_;
+
+
     boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::PlannerManager>> planner_plugin_loader;
-    planning_interface::MotionPlanRequest req;
-    planning_interface::MotionPlanResponse res;
-    moveit_msgs::MotionPlanResponse response;
-    RobotStateInformer *robotStateInformer;
-//    planning_scene::PlanningScenePtr planning_scene;
+    planning_interface::MotionPlanResponse res_;
+
+    RobotStateInformer *state_informer_;
+    RobotDescription *rd_;
+    //    planning_scene::PlanningScenePtr planning_scene;
     trajectory_processing::IterativeParabolicTimeParameterization timeParameterizer;
 
-    std::string PLANNING_GROUP = "L_PELVIS_PALM_10DOF";
-    std::string link_name = "l_palm";
+    double position_tolerance_;
+    double angle_tolerance_;
 
-    void displayInRviz(moveit_msgs::MotionPlanResponse response);
-    void publishToWholeBodyTrajectory(moveit_msgs::MotionPlanResponse response, std::string PLANNING_GROUP);
+    void displayInRviz(const moveit_msgs::MotionPlanResponse &response_msg);
     void loadPlanners();
 };
 
 
-#endif // MANIPULATION_PLANNER_NODE_H
+#endif // TASKSPACE_PLANNER_H

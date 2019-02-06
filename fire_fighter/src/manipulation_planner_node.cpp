@@ -1,72 +1,66 @@
 #include <fire_fighter/manipulation_planner_node.h>
 
-ManipulationPlannerNode::ManipulationPlannerNode(ros::NodeHandle &nh):nh_(nh)
+TaskspacePlanner::TaskspacePlanner(ros::NodeHandle &nh, std::string urdf_param):nh_(nh), wholebodyController_(nh)
 {
-    robot_model_loader::RobotModelLoader robot_model_loader("/atlas/robot_description");
-    robot_model = robot_model_loader.getModel();
-    robotStateInformer = RobotStateInformer::getRobotStateInformer(nh);
+    state_informer_ = RobotStateInformer::getRobotStateInformer(nh);
+    rd_ = RobotDescription::getRobotDescription(nh);
 
+    if (urdf_param == "") {
+        urdf_param.assign("/"+rd_->getRobotName()+"/robot_description");
+    }
+
+    robot_model_loader::RobotModelLoader robot_model_loader(urdf_param);
+    robot_model_ = robot_model_loader.getModel();
+
+    display_publisher_ =
+            nh_.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
+
+    planning_scene_.reset(new planning_scene::PlanningScene(robot_model_));
+
+    position_tolerance_  =  0.01;
+    angle_tolerance_ = 0.01;
+    moveit_robot_state_  = std::shared_ptr<robot_state::RobotState>(new robot_state::RobotState(robot_model_));
+
+    plugin_param_ = "/move_group/planning_plugin";
     loadPlanners();
 
 }
 
-int ManipulationPlannerNode::execute(geometry_msgs::PoseStamped pose, std::string PLANNING_GROUP, std::string link_name)
+TaskspacePlanner::~TaskspacePlanner(){
+    planner_instance.reset();
+}
+
+bool TaskspacePlanner::execute(const geometry_msgs::PoseStamped &pose, std::string planning_group)
 {      
-    planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
-    std::vector<double> tolerance_pose(3, 0.01);
-    std::vector<double> tolerance_angle(3, 0.01);
+    planning_interface::MotionPlanRequest req;
+    moveit_msgs::MotionPlanResponse response_msg;
 
-    robotStateInformer->getJointStateMessage(req.start_state.joint_state);
+    state_informer_->getJointStateMessage(req.start_state.joint_state);
 
-    req.group_name = PLANNING_GROUP;
+    req.group_name = planning_group;
+
+    // configured planning groups are all upper case. right arm begins with R and left arm begins with L
+    std::string ee_frame =  planning_group.front() == 'R' ? rd_->getRightEEFrame() : rd_->getLeftEEFrame();
 
     moveit_msgs::Constraints pose_goal =
-            kinematic_constraints::constructGoalConstraints(link_name, pose, tolerance_pose, tolerance_angle);
+            kinematic_constraints::constructGoalConstraints(ee_frame, pose, position_tolerance_, angle_tolerance_);
     req.goal_constraints.push_back(pose_goal);
 
     planning_interface::PlanningContextPtr context =
-            planner_instance->getPlanningContext(planning_scene, req, res.error_code_);
-    context->solve(res);
-    if (res.error_code_.val != res.error_code_.SUCCESS)
+            planner_instance->getPlanningContext(planning_scene_, req, res_.error_code_);
+    context->solve(res_);
+    if (res_.error_code_.val != res_.error_code_.SUCCESS)
     {
         ROS_ERROR("Could not compute plan successfully");
-        return 0;
+        return false;
     }
 
-    res.getMessage(response);
+    res_.getMessage(response_msg);
 
-//     Visualize the trajectory
-    displayInRviz(response);
+    //     Visualize the trajectory
+    displayInRviz(response_msg);
 
-//    Publishiing to WholeBodyTrajectory
-    publishToWholeBodyTrajectory(response, PLANNING_GROUP);
-
-    planner_instance.reset();
-
-    return 0;
-}
-
-
-void ManipulationPlannerNode::displayInRviz(moveit_msgs::MotionPlanResponse response)
-{
-    ROS_INFO("Visualizing the trajectory");
-
-    ros::Publisher display_publisher;
-    moveit_msgs::DisplayTrajectory display_trajectory;
-
-    display_publisher =
-            nh_.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path", 1, true);
-
-    display_trajectory.trajectory_start = response.trajectory_start;
-    display_trajectory.trajectory.push_back(response.trajectory);
-    display_publisher.publish(display_trajectory);
-    ros::Duration(0.5).sleep();
-
-}
-
-void  ManipulationPlannerNode::publishToWholeBodyTrajectory(moveit_msgs::MotionPlanResponse response, std::string PLANNING_GROUP)
-{
     // Robot state is required for generating RobotTrajectory object
     // RobotTrajectoryObject is required for generating creating IterativeParabolicTimeParameterization
     // IterativeParabolicTimeParameterization is required for generating timestamps for each trajectory point
@@ -78,29 +72,67 @@ void  ManipulationPlannerNode::publishToWholeBodyTrajectory(moveit_msgs::MotionP
     //              convert RobotTrajectory back to moveit_msgs_RobotTrajectory
 
 
-    robot_model::RobotState moveitRobotState = robot_state::RobotState(robot_model);
-    robot_trajectory::RobotTrajectory robot_traj = robot_trajectory::RobotTrajectory(robot_model, PLANNING_GROUP);
-    moveitRobotState.update();
-    robot_traj.setRobotTrajectoryMsg(moveitRobotState, response.trajectory.joint_trajectory);
+
+    robot_trajectory::RobotTrajectory robot_traj = robot_trajectory::RobotTrajectory(robot_model_, planning_group);
+    moveit_robot_state_->update();
+    robot_traj.setRobotTrajectoryMsg(*moveit_robot_state_, response_msg.trajectory.joint_trajectory);
     timeParameterizer.computeTimeStamps(robot_traj);
 
-    robot_traj.getRobotTrajectoryMsg(response.trajectory);
+    robot_traj.getRobotTrajectoryMsg(response_msg.trajectory);
 
     //    for(size_t i = 0; i < response.trajectory.joint_trajectory.joint_names.size() ; i++){
     //        ROS_INFO("%d: Joint Name %s, number of points %d", i, response.trajectory.joint_trajectory.joint_names.at(i).c_str(), response.trajectory.joint_trajectory.points.size());
     //    }
 
+    /// @todo: move this into calling node
+    wholebodyController_.executeTrajectory(response_msg.trajectory);
 
-    WholebodyControlInterface wholeBody(nh_);
-    wholeBody.executeTrajectory(RobotSide::LEFT,response.trajectory);
-
+    return true;
 }
 
-void ManipulationPlannerNode::loadPlanners()
+double TaskspacePlanner::getPositionTolerance() const
+{
+    return position_tolerance_;
+}
+
+void TaskspacePlanner::setPositionTolerance(const double tolerance_pose)
+{
+    position_tolerance_ = tolerance_pose;
+}
+
+double TaskspacePlanner::getAngleTolerance() const
+{
+    return angle_tolerance_;
+}
+
+void TaskspacePlanner::setAngleTolerance(const double tolerance_angle)
+{
+    angle_tolerance_ = tolerance_angle;
+}
+
+std::string TaskspacePlanner::getPluginParameter() const{
+    return plugin_param_;
+}
+
+void TaskspacePlanner::setPluginParameter(const std::string &plugin_param){
+    plugin_param_ = plugin_param;
+    loadPlanners();
+}
+
+void TaskspacePlanner::displayInRviz(const moveit_msgs::MotionPlanResponse &response_msg)
+{
+    ROS_INFO("Visualizing the trajectory");
+    display_trajectory_.trajectory_start = response_msg.trajectory_start;
+    display_trajectory_.trajectory.push_back(response_msg.trajectory);
+    display_publisher_.publish(display_trajectory_);
+}
+
+
+void TaskspacePlanner::loadPlanners()
 {
     ROS_INFO("Loading Planners");
 
-    if (!nh_.getParam("/move_group/planning_plugin", planner_plugin_name))
+    if (!nh_.getParam(plugin_param_, planner_plugin_name))
         ROS_FATAL_STREAM("Could not find planner plugin name");
 
     try
@@ -117,7 +149,7 @@ void ManipulationPlannerNode::loadPlanners()
     {
         planner_instance.reset(planner_plugin_loader->createUnmanagedInstance(planner_plugin_name));
 
-        if (!planner_instance->initialize(robot_model, nh_.getNamespace()))
+        if (!planner_instance->initialize(robot_model_, nh_.getNamespace()))
             ROS_FATAL_STREAM("Could not initialize planner instance");
         ROS_INFO_STREAM("Using planning interface '" << planner_instance->getDescription() << "'");
     }
