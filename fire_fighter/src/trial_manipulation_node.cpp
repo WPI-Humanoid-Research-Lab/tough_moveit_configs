@@ -1,5 +1,6 @@
 #include <pluginlib/class_loader.h>
 #include <ros/ros.h>
+#include <tf/tf.h>
 #include "tough_common/tough_common_names.h"
 #include <geometry_msgs/PoseStamped.h>
 #include <fire_fighter/manipulation_planner_node.h>
@@ -11,19 +12,28 @@ int main(int argc, char** argv)
     spinner.start();
     ros::NodeHandle nh;
 
-    const std::string PLANNING_GROUP = "L_PELVIS_PALM_10DOF"; //TOUGH_COMMON_NAMES::LEFT__ARM_10DOF_GROUP;
-
     geometry_msgs::PoseStamped pose;
-    pose.header.frame_id = "pelvis";
-    pose.pose.position.x = 0.2;
-    pose.pose.position.y = 0.4;
-    pose.pose.position.z = 0.2;
     pose.pose.orientation.w = 1.0;
+    pose.header.frame_id = "pelvis";
+    
+    if(argc != 4)
+    {
+        pose.pose.position.x = 0.4;
+        pose.pose.position.y = 0.8;
+        pose.pose.position.z = 0.2;
 
-    std::string link_name = "l_hand";
+    }
+    else {
+        pose.pose.position.x = std::atof(argv[1]);
+        pose.pose.position.y = std::atof(argv[2]);
+        pose.pose.position.z = std::atof(argv[3]);
 
+    }
     TaskspacePlanner man(nh);
-    man.execute(pose, PLANNING_GROUP);
+
+    std::string planner_group = TOUGH_COMMON_NAMES::RIGHT_ARM_10DOF_GROUP;
+//    std::string planner_group = TOUGH_COMMON_NAMES::RIGHT_ARM_7DOF_GROUP;
+    man.execute(pose, planner_group);
 
     return 0;
 }

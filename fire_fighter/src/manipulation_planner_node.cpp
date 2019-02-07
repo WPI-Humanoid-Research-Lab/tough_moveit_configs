@@ -30,7 +30,7 @@ TaskspacePlanner::~TaskspacePlanner(){
     planner_instance.reset();
 }
 
-bool TaskspacePlanner::execute(const geometry_msgs::PoseStamped &pose, std::string planning_group)
+bool TaskspacePlanner::execute(geometry_msgs::PoseStamped &pose_msg, std::string planning_group)
 {      
 
     planning_interface::MotionPlanRequest req;
@@ -43,9 +43,17 @@ bool TaskspacePlanner::execute(const geometry_msgs::PoseStamped &pose, std::stri
     // configured planning groups are all upper case. right arm begins with R and left arm begins with L
     std::string ee_frame =  planning_group.front() == 'R' ? rd_->getRightEEFrame() : rd_->getLeftEEFrame();
 
+    if(rd_->getRobotName() == "atlas") {
+        RobotSide side = planning_group.front() == 'R'? RobotSide::RIGHT : RobotSide::LEFT;
+        fixEEOrientation(side, pose_msg.pose.orientation);
+    }
+
     moveit_msgs::Constraints pose_goal =
-            kinematic_constraints::constructGoalConstraints(ee_frame, pose, position_tolerance_, angle_tolerance_);
+            kinematic_constraints::constructGoalConstraints(ee_frame, pose_msg, position_tolerance_, angle_tolerance_);
     req.goal_constraints.push_back(pose_goal);
+
+    req.allowed_planning_time = 5.0;
+    req.num_planning_attempts = 2;
 
     planning_interface::PlanningContextPtr context =
             planner_instance->getPlanningContext(planning_scene_, req, res_.error_code_);
@@ -118,6 +126,22 @@ void TaskspacePlanner::setPluginParameter(const std::string &plugin_param){
     plugin_param_ = plugin_param;
     loadPlanners();
 }
+
+void TaskspacePlanner::fixEEOrientation(const RobotSide side, geometry_msgs::Quaternion &orientation)
+{
+    tf::Quaternion q_orig, q_rot, q_new;
+    if (side == RobotSide::LEFT){
+        q_rot = tf::createQuaternionFromRPY(0.0, 0.0, -M_PI_2); //left hand orientation fix
+    }
+    else if (side == RobotSide::RIGHT){
+        q_rot = tf::createQuaternionFromRPY(M_PI, 0.0, M_PI_2); //right hand orientation fix
+    }
+    tf::quaternionMsgToTF(orientation , q_orig);
+    q_new = q_rot*q_orig;
+    q_new.normalize();
+    quaternionTFToMsg(q_new, orientation);
+}
+
 
 void TaskspacePlanner::displayInRviz(const moveit_msgs::MotionPlanResponse &response_msg)
 {

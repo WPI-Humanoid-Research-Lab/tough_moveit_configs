@@ -3,6 +3,7 @@
 
 #include <pluginlib/class_loader.h>
 #include <ros/ros.h>
+#include <geometry_msgs/Quaternion.h>
 
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_state/robot_state.h>
@@ -25,7 +26,7 @@ class TaskspacePlanner
 public:
     TaskspacePlanner(ros::NodeHandle &nh, std::string urdf_param="");
     ~TaskspacePlanner();
-    bool execute(const geometry_msgs::PoseStamped &pose, std::string planning_group = TOUGH_COMMON_NAMES::RIGHT_ARM_10DOF_GROUP);
+    bool execute(geometry_msgs::PoseStamped &pose, std::string planning_group = TOUGH_COMMON_NAMES::RIGHT_ARM_10DOF_GROUP);
 
     double getPositionTolerance() const;
     void setPositionTolerance(const double position_tolerance);
@@ -41,6 +42,9 @@ private:
 
     std::shared_ptr<robot_model::RobotState>  moveit_robot_state_ ;
     std::string plugin_param_;
+
+    double planning_time_;
+    int num_planning_attempts_;
 
     moveit_msgs::DisplayTrajectory display_trajectory_;
 //    robot_model::RobotState moveit_robot_state_  ;
@@ -60,6 +64,7 @@ private:
     RobotDescription *rd_;
     //    planning_scene::PlanningScenePtr planning_scene;
     trajectory_processing::IterativeParabolicTimeParameterization timeParameterizer;
+    void fixEEOrientation(const RobotSide side, geometry_msgs::Quaternion &orientation);
 
     double position_tolerance_;
     double angle_tolerance_;
