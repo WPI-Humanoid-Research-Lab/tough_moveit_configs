@@ -1,5 +1,14 @@
-controller_list:
-  - name: fake_L_PELVIS_PALM_10DOF_controller
+atlas:
+# MoveIt-specific simulation settings
+  moveit_sim_hw_interface:
+    joint_model_group: controllers_initial_group_
+    joint_model_group_pose: controllers_initial_pose_
+# Settings for ros_control control loop
+  generic_hw_control_loop:
+    loop_hz: 300
+    cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+  hardware_interface:
     joints:
       - back_bkz
       - back_bky
@@ -11,38 +20,6 @@ controller_list:
       - l_arm_wry
       - l_arm_wrx
       - l_arm_wry2
-  - name: fake_R_PELVIS_PALM_10DOF_controller
-    joints:
-      - back_bkz
-      - back_bky
-      - back_bkx
-      - r_arm_shz
-      - r_arm_shx
-      - r_arm_ely
-      - r_arm_elx
-      - r_arm_wry
-      - r_arm_wrx
-      - r_arm_wry2
-  - name: fake_R_SHOULDER_HAND_7DOF_controller
-    joints:
-      - r_arm_shz
-      - r_arm_shx
-      - r_arm_ely
-      - r_arm_elx
-      - r_arm_wry
-      - r_arm_wrx
-      - r_arm_wry2
-  - name: fake_L_SHOULDER_HAND_7DOF_controller
-    joints:
-      - l_arm_shz
-      - l_arm_shx
-      - l_arm_ely
-      - l_arm_elx
-      - l_arm_wry
-      - l_arm_wrx
-      - l_arm_wry2
-  - name: fake_leftGripper_controller
-    joints:
       - l_palm_finger_1_joint
       - l_finger_1_joint_1
       - l_finger_1_joint_2
@@ -82,8 +59,15 @@ controller_list:
       - l_finger_middle_joint_paraproximal_bar
       - l_finger_middle_joint_proximal_actuating_hinge
       - l_finger_middle_joint_proximal_actuating_bar
-  - name: fake_rightGripper_controller
-    joints:
+      - neck_ry
+      - hokuyo_joint
+      - r_arm_shz
+      - r_arm_shx
+      - r_arm_ely
+      - r_arm_elx
+      - r_arm_wry
+      - r_arm_wrx
+      - r_arm_wry2
       - r_palm_finger_1_joint
       - r_finger_1_joint_1
       - r_finger_1_joint_2
@@ -123,3 +107,23 @@ controller_list:
       - r_finger_middle_joint_paraproximal_bar
       - r_finger_middle_joint_proximal_actuating_hinge
       - r_finger_middle_joint_proximal_actuating_bar
+      - l_leg_hpz
+      - l_leg_hpx
+      - l_leg_hpy
+      - l_leg_kny
+      - l_leg_aky
+      - l_leg_akx
+      - r_leg_hpz
+      - r_leg_hpx
+      - r_leg_hpy
+      - r_leg_kny
+      - r_leg_aky
+      - r_leg_akx
+    sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  controller_list:
+    []
