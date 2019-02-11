@@ -172,34 +172,6 @@ R_PELVIS_PALM_10DOF:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-R_SHOULDER_HAND_7DOF:
-  default_planner_config: RRTstar
-  planner_configs:
-    - SBL
-    - EST
-    - LBKPIECE
-    - BKPIECE
-    - KPIECE
-    - RRT
-    - RRTConnect
-    - RRTstar
-    - TRRT
-    - PRM
-    - PRMstar
-    - FMT
-    - BFMT
-    - PDST
-    - STRIDE
-    - BiTRRT
-    - LBTRRT
-    - BiEST
-    - ProjEST
-    - LazyPRM
-    - LazyPRMstar
-    - SPARS
-    - SPARStwo
-  projection_evaluator: joints(r_arm_shz,r_arm_shx)
-  longest_valid_segment_fraction: 0.005
 L_SHOULDER_HAND_7DOF:
   default_planner_config: RRTstar
   planner_configs:
@@ -228,8 +200,36 @@ L_SHOULDER_HAND_7DOF:
     - SPARStwo
   projection_evaluator: joints(l_arm_shz,l_arm_shx)
   longest_valid_segment_fraction: 0.005
+R_SHOULDER_HAND_7DOF:
+  default_planner_config: RRTstar
+  planner_configs:
+    - SBL
+    - EST
+    - LBKPIECE
+    - BKPIECE
+    - KPIECE
+    - RRT
+    - RRTConnect
+    - RRTstar
+    - TRRT
+    - PRM
+    - PRMstar
+    - FMT
+    - BFMT
+    - PDST
+    - STRIDE
+    - BiTRRT
+    - LBTRRT
+    - BiEST
+    - ProjEST
+    - LazyPRM
+    - LazyPRMstar
+    - SPARS
+    - SPARStwo
+  projection_evaluator: joints(r_arm_shz,r_arm_shx)
+  longest_valid_segment_fraction: 0.005
 leftGripper:
-  default_planner_config: ""
+  default_planner_config: None
   planner_configs:
     - SBL
     - EST
@@ -255,7 +255,7 @@ leftGripper:
     - SPARS
     - SPARStwo
 rightGripper:
-  default_planner_config: ""
+  default_planner_config: None
   planner_configs:
     - SBL
     - EST

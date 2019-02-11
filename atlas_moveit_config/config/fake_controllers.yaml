@@ -23,15 +23,6 @@ controller_list:
       - r_arm_wry
       - r_arm_wrx
       - r_arm_wry2
-  - name: fake_R_SHOULDER_HAND_7DOF_controller
-    joints:
-      - r_arm_shz
-      - r_arm_shx
-      - r_arm_ely
-      - r_arm_elx
-      - r_arm_wry
-      - r_arm_wrx
-      - r_arm_wry2
   - name: fake_L_SHOULDER_HAND_7DOF_controller
     joints:
       - l_arm_shz
@@ -41,6 +32,15 @@ controller_list:
       - l_arm_wry
       - l_arm_wrx
       - l_arm_wry2
+  - name: fake_R_SHOULDER_HAND_7DOF_controller
+    joints:
+      - r_arm_shz
+      - r_arm_shx
+      - r_arm_ely
+      - r_arm_elx
+      - r_arm_wry
+      - r_arm_wrx
+      - r_arm_wry2
   - name: fake_leftGripper_controller
     joints:
       - l_palm_finger_1_joint
