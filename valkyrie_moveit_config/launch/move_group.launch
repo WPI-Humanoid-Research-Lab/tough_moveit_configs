@@ -1,5 +1,10 @@
 <launch>
 
+
+  <remap from="robot_description" to="/valkyrie/robot_description"/>
+
+  <remap from="joint_states" to="/ihmc_ros/valkyrie/output/joint_states"/>
+	
   <include file="$(find valkyrie_moveit_config)/launch/planning_context.launch" />
 
   <!-- GDB Debug Option -->

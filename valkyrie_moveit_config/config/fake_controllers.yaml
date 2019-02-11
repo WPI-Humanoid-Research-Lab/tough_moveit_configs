@@ -1,5 +1,5 @@
 controller_list:
-  - name: fake_leftArm_controller
+  - name: fake_L_SHOULDER_HAND_7DOF_controller
     joints:
       - leftShoulderPitch
       - leftShoulderRoll
@@ -8,7 +8,8 @@ controller_list:
       - leftForearmYaw
       - leftWristRoll
       - leftWristPitch
-  - name: fake_rightArm_controller
+      - leftMiddleFingerPitch1
+  - name: fake_R_SHOULDER_HAND_7DOF_controller
     joints:
       - rightShoulderPitch
       - rightShoulderRoll
@@ -17,31 +18,8 @@ controller_list:
       - rightForearmYaw
       - rightWristRoll
       - rightWristPitch
-  - name: fake_rightPalm_controller
-    joints:
-      - torsoYaw
-      - torsoPitch
-      - torsoRoll
-      - rightShoulderPitch
-      - rightShoulderRoll
-      - rightShoulderYaw
-      - rightElbowPitch
-      - rightForearmYaw
-      - rightWristRoll
-      - rightWristPitch
-  - name: fake_leftPalm_controller
-    joints:
-      - torsoYaw
-      - torsoPitch
-      - torsoRoll
-      - leftShoulderPitch
-      - leftShoulderRoll
-      - leftShoulderYaw
-      - leftElbowPitch
-      - leftForearmYaw
-      - leftWristRoll
-      - leftWristPitch
-  - name: fake_rightMiddleFingerGroup_controller
+      - rightMiddleFingerPitch1
+  - name: fake_R_PELVIS_PALM_10DOF_controller
     joints:
       - torsoYaw
       - torsoPitch
@@ -54,7 +32,7 @@ controller_list:
       - rightWristRoll
       - rightWristPitch
       - rightMiddleFingerPitch1
-  - name: fake_leftMiddleFingerGroup_controller
+  - name: fake_L_PELVIS_PALM_10DOF_controller
     joints:
       - torsoYaw
       - torsoPitch
