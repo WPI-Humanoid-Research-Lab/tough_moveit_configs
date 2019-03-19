@@ -9,7 +9,7 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
-    <group name="leftArm">
+    <group name="L_SHOULDER_HAND_7DOF">
         <link name="leftShoulderPitchLink" />
         <link name="leftShoulderRollLink" />
         <link name="leftShoulderYawLink" />
@@ -24,9 +24,9 @@
         <joint name="leftForearmYaw" />
         <joint name="leftWristRoll" />
         <joint name="leftWristPitch" />
-        <chain base_link="leftShoulderPitchLink" tip_link="leftPalm" />
+        <chain base_link="leftShoulderPitchLink" tip_link="leftMiddleFingerPitch1Link" />
     </group>
-    <group name="rightArm">
+    <group name="R_SHOULDER_HAND_7DOF">
         <link name="rightShoulderPitchLink" />
         <link name="rightShoulderRollLink" />
         <link name="rightShoulderYawLink" />
@@ -41,15 +41,9 @@
         <joint name="rightForearmYaw" />
         <joint name="rightWristRoll" />
         <joint name="rightWristPitch" />
-        <chain base_link="rightShoulderPitchLink" tip_link="rightPalm" />
+        <chain base_link="rightShoulderPitchLink" tip_link="rightMiddleFingerPitch1Link" />
     </group>
-    <group name="rightPalm">
-        <chain base_link="pelvis" tip_link="rightPalm" />
-    </group>
-    <group name="leftPalm">
-        <chain base_link="pelvis" tip_link="leftPalm" />
-    </group>
-    <group name="rightMiddleFingerGroup">
+    <group name="R_PELVIS_PALM_10DOF">
         <joint name="torsoYaw" />
         <joint name="torsoPitch" />
         <joint name="torsoRoll" />
@@ -63,7 +57,7 @@
         <joint name="rightMiddleFingerPitch1" />
         <chain base_link="pelvis" tip_link="rightMiddleFingerPitch1Link" />
     </group>
-    <group name="leftMiddleFingerGroup">
+    <group name="L_PELVIS_PALM_10DOF">
         <joint name="torsoYaw" />
         <joint name="torsoPitch" />
         <joint name="torsoRoll" />
@@ -77,26 +71,9 @@
         <joint name="leftMiddleFingerPitch1" />
         <chain base_link="pelvis" tip_link="leftMiddleFingerPitch1Link" />
     </group>
-    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
-    <group_state name="ZeroPose" group="leftPalm">
-        <joint name="leftElbowPitch" value="0" />
-        <joint name="leftForearmYaw" value="0" />
-        <joint name="leftShoulderPitch" value="0" />
-        <joint name="leftShoulderRoll" value="0" />
-        <joint name="leftShoulderYaw" value="0" />
-        <joint name="leftWristPitch" value="0" />
-        <joint name="leftWristRoll" value="0" />
-        <joint name="torsoPitch" value="0" />
-        <joint name="torsoRoll" value="0" />
-        <joint name="torsoYaw" value="0" />
-    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="rightTorsoEE" parent_link="rightWristRollLink" group="rightPalm" />
-    <end_effector name="leftTorsoEE" parent_link="leftWristRollLink" group="leftPalm" />
-    <end_effector name="rightArmEE" parent_link="rightWristRollLink" group="rightArm" />
-    <end_effector name="leftArmEE" parent_link="leftWristRollLink" group="leftPalm" />
-    <end_effector name="rightMiddleFingerPitch1Link" parent_link="rightMiddleFingerPitch1Link" group="rightMiddleFingerGroup" />
-    <end_effector name="leftMiddleFingerPitch1Link" parent_link="leftMiddleFingerPitch1Link" group="leftMiddleFingerGroup" />
+    <end_effector name="rightMiddleFingerPitch1Link" parent_link="rightMiddleFingerPitch1Link" group="R_PELVIS_PALM_10DOF" />
+    <end_effector name="leftMiddleFingerPitch1Link" parent_link="leftMiddleFingerPitch1Link" group="L_PELVIS_PALM_10DOF" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="floating" parent_frame="world" child_link="pelvis" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
