@@ -1,11 +1,11 @@
 moveit_setup_assistant_config:
   URDF:
-    package: ihmc_atlas_ros
-    relative_path: urdf/atlas_v5_robotiq.urdf
+    package: ihmc_gazebo
+    relative_path: urdf/atlas_v5_reflex_hands.urdf
     xacro_args: "--inorder "
   SRDF:
     relative_path: config/atlas.srdf
   CONFIG:
     author_name: Ashay Aswale
     author_email: asaswale@wpi.edu
-    generated_timestamp: 1549750229
+    generated_timestamp: 1555439682

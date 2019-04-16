@@ -228,7 +228,7 @@ R_SHOULDER_HAND_7DOF:
     - SPARStwo
   projection_evaluator: joints(r_arm_shz,r_arm_shx)
   longest_valid_segment_fraction: 0.005
-leftGripper:
+LEFT_GRIPPER:
   default_planner_config: None
   planner_configs:
     - SBL
@@ -254,7 +254,9 @@ leftGripper:
     - LazyPRMstar
     - SPARS
     - SPARStwo
-rightGripper:
+  projection_evaluator: joints(l_fixed,l_fixed_dummy)
+  longest_valid_segment_fraction: 0.005
+RIGHT_GRIPPER:
   default_planner_config: None
   planner_configs:
     - SBL
@@ -280,3 +282,5 @@ rightGripper:
     - LazyPRMstar
     - SPARS
     - SPARStwo
+  projection_evaluator: joints(r_fixed,r_fixed_dummy)
+  longest_valid_segment_fraction: 0.005

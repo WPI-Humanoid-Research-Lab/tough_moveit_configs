@@ -20,45 +20,18 @@ atlas:
       - l_arm_wry
       - l_arm_wrx
       - l_arm_wry2
-      - l_palm_finger_1_joint
-      - l_finger_1_joint_1
-      - l_finger_1_joint_2
-      - l_finger_1_joint_3
-      - l_finger_1_joint_paradistal_hinge
-      - l_finger_1_joint_median_actuating_hinge
-      - l_finger_1_joint_median_actuating_hinge_median_bar
-      - l_finger_1_joint_paramedian_hinge
-      - l_finger_1_joint_paramedian_hinge_median_bar_underactuated
-      - l_finger_1_joint_paraproximal_actuating_hinge
-      - l_finger_1_joint_paraproximal_bar
-      - l_finger_1_joint_proximal_actuating_hinge
-      - l_finger_1_joint_proximal_actuating_bar
-      - l_palm_finger_2_joint
-      - l_finger_2_joint_1
-      - l_finger_2_joint_2
-      - l_finger_2_joint_3
-      - l_finger_2_joint_paradistal_hinge
-      - l_finger_2_joint_median_actuating_hinge
-      - l_finger_2_joint_median_actuating_hinge_median_bar
-      - l_finger_2_joint_paramedian_hinge
-      - l_finger_2_joint_paramedian_hinge_median_bar_underactuated
-      - l_finger_2_joint_paraproximal_actuating_hinge
-      - l_finger_2_joint_paraproximal_bar
-      - l_finger_2_joint_proximal_actuating_hinge
-      - l_finger_2_joint_proximal_actuating_bar
-      - l_palm_finger_middle_joint
-      - l_finger_middle_joint_1
-      - l_finger_middle_joint_2
-      - l_finger_middle_joint_3
-      - l_finger_middle_joint_paradistal_hinge
-      - l_finger_middle_joint_median_actuating_hinge
-      - l_finger_middle_joint_median_actuating_hinge_median_bar
-      - l_finger_middle_joint_paramedian_hinge
-      - l_finger_middle_joint_paramedian_hinge_median_bar_underactuated
-      - l_finger_middle_joint_paraproximal_actuating_hinge
-      - l_finger_middle_joint_paraproximal_bar
-      - l_finger_middle_joint_proximal_actuating_hinge
-      - l_finger_middle_joint_proximal_actuating_bar
+      - l_fixed
+      - l_fixed_dummy
+      - l_fixed_dummy2
+      - l_palm_to_finger_1_1
+      - l_finger_1_1_to_finger_1_2
+      - l_finger_1_2_to_finger_1_3
+      - l_palm_to_finger_2_1
+      - l_finger_2_1_to_finger_2_2
+      - l_finger_2_2_to_finger_2_3
+      - l_palm_to_finger_3_1
+      - l_finger_3_1_to_finger_3_2
+      - l_finger_3_2_to_finger_3_3
       - neck_ry
       - hokuyo_joint
       - r_arm_shz
@@ -68,45 +41,18 @@ atlas:
       - r_arm_wry
       - r_arm_wrx
       - r_arm_wry2
-      - r_palm_finger_1_joint
-      - r_finger_1_joint_1
-      - r_finger_1_joint_2
-      - r_finger_1_joint_3
-      - r_finger_1_joint_paradistal_hinge
-      - r_finger_1_joint_median_actuating_hinge
-      - r_finger_1_joint_median_actuating_hinge_median_bar
-      - r_finger_1_joint_paramedian_hinge
-      - r_finger_1_joint_paramedian_hinge_median_bar_underactuated
-      - r_finger_1_joint_paraproximal_actuating_hinge
-      - r_finger_1_joint_paraproximal_bar
-      - r_finger_1_joint_proximal_actuating_hinge
-      - r_finger_1_joint_proximal_actuating_bar
-      - r_palm_finger_2_joint
-      - r_finger_2_joint_1
-      - r_finger_2_joint_2
-      - r_finger_2_joint_3
-      - r_finger_2_joint_paradistal_hinge
-      - r_finger_2_joint_median_actuating_hinge
-      - r_finger_2_joint_median_actuating_hinge_median_bar
-      - r_finger_2_joint_paramedian_hinge
-      - r_finger_2_joint_paramedian_hinge_median_bar_underactuated
-      - r_finger_2_joint_paraproximal_actuating_hinge
-      - r_finger_2_joint_paraproximal_bar
-      - r_finger_2_joint_proximal_actuating_hinge
-      - r_finger_2_joint_proximal_actuating_bar
-      - r_palm_finger_middle_joint
-      - r_finger_middle_joint_1
-      - r_finger_middle_joint_2
-      - r_finger_middle_joint_3
-      - r_finger_middle_joint_paradistal_hinge
-      - r_finger_middle_joint_median_actuating_hinge
-      - r_finger_middle_joint_median_actuating_hinge_median_bar
-      - r_finger_middle_joint_paramedian_hinge
-      - r_finger_middle_joint_paramedian_hinge_median_bar_underactuated
-      - r_finger_middle_joint_paraproximal_actuating_hinge
-      - r_finger_middle_joint_paraproximal_bar
-      - r_finger_middle_joint_proximal_actuating_hinge
-      - r_finger_middle_joint_proximal_actuating_bar
+      - r_fixed
+      - r_fixed_dummy
+      - r_fixed_dummy2
+      - r_palm_to_finger_1_1
+      - r_finger_1_1_to_finger_1_2
+      - r_finger_1_2_to_finger_1_3
+      - r_palm_to_finger_2_1
+      - r_finger_2_1_to_finger_2_2
+      - r_finger_2_2_to_finger_2_3
+      - r_palm_to_finger_3_1
+      - r_finger_3_1_to_finger_3_2
+      - r_finger_3_2_to_finger_3_3
       - l_leg_hpz
       - l_leg_hpx
       - l_leg_hpy
